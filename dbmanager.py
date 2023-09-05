@@ -65,10 +65,10 @@ def createDB():
 
 if __name__ == "__main__":
 	if len(sys.argv) != 2:
-		print("Usage: python config.py <createDB>")
+		print("Usage: python dbmanager.py <make>")
 		sys.exit(0)
 
 	if sys.argv[1] == "make":
-		make()
+		createDB()
 	else:
-		print("Usage: python config.py <createDB>")
+		print("Usage: python dbmanager.py <make>")
