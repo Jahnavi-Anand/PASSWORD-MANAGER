@@ -11,7 +11,7 @@ from func.db import dbgen
 def checkConfig():
 	db = dbgen()
 	cursor = db.cursor()
-	cursor.execute("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA  WHERE SCHEME_NAME = 'passwdDB'")
+	cursor.execute("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA  WHERE SCHEMA_NAME = 'passwdDB'")
 	results = cursor.fetchall()
 	if len(result) != 0:
 		return True
