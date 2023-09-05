@@ -2,9 +2,9 @@
 
 Usage
 1. Install MariaDB
-  *In sql console write:
-  *`CREATE USER 'passwdDB'@localhost IDENTIFIED BY 'qwerty'`
-  *`GRANT ALL PRIVILEGES ON *.* TO 'passwdDB'@localhost IDENTIFIED BY 'qwerty'`
+  +In sql console write:
+  +`CREATE USER 'passwdDB'@localhost IDENTIFIED BY 'qwerty'`
+  +`GRANT ALL PRIVILEGES ON *.* TO 'passwdDB'@localhost IDENTIFIED BY 'qwerty'`
 
 2. Navigate to the project directory
 
