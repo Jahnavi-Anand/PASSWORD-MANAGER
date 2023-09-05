@@ -4,7 +4,7 @@ import hashlib
 import pyperclip
 
 import func.addAndRetrieve
-import func.generate
+import func.generator
 from func.db import dbgen
 
 parser = argparse.ArgumentParser(description='Description')
@@ -53,23 +53,23 @@ def main():
 
 		res=inputAndValidateMasterPassword()
 		if res is not None:
-			func.add.addEntry(res[0],res[1],args.name,args.url,args.email,args.login)
+			func.addAndRetrieve.addEntry(res[0],res[1],args.name,args.url,args.email,args.login)
 
 
 	if args.option in ["extract","e"]:
 		res=inputAndValidateMasterPassword()
 		search={}
 		if args.name is not None:
-			search["sitename"]=args.name
+			search["name"]=args.name
 		if args.url is not None:
-			search["siteurl"]=args.url
+			search["url"]=args.url
 		if args.email is not None:
 			search["email"]=args.email
 		if args.login is not None:
 			search["username"]=args.login
 
 		if res is not None:
-			func.retrieve.retrieveEntries(res[0],res[1],search,decryptPassword=args.copy)
+			func.addAndRetrieve.getEntry(res[0],res[1],search,decrypt=args.copy)
 
 
 	if args.option in ["generate","g"]:

@@ -56,10 +56,11 @@ def getEntry(masterPasswd, saltedPhrase, search, decrypt=False):
 	if len(search)==0:
 		query = "SELECT * FROM passwdDB.entries"
 	else:
-		query = "SELECT * FROM passwdDB.entries WHERE"
+		query = "SELECT * FROM passwdDB.entries WHERE "
 		for i in search:
-			query +=f"{i} ='{search[i]}' AND "
+			query +=f"{i} = '{search[i]}' AND "
 		query = query[:-5]
+
 	cursor.execute(query)
 	result = cursor.fetchall()
 
@@ -82,11 +83,11 @@ def getEntry(masterPasswd, saltedPhrase, search, decrypt=False):
 		console.print(displayTable)
 		return
 
-	if decrypt and len(results)==1:
-		masterKey = masterKeys(masterPasswd, saltPhrase)
-		decryptedPWD = func.aesutil.decrypt(key=masterKey, source=results[0][4],keyType="bytes")
+	if decrypt and len(result)==1:
+		masterKey = masterKeys(masterPasswd, saltedPhrase)
+		decryptedPWD = func.aesutil.decrypt(key=masterKey, source=result[0][4],keyType="bytes")
 
 		print("Password copied to clipboard")
-		pyperclip.copy(decryptedPwD.decode())
+		pyperclip.copy(decryptedPWD.decode())
 
 	db.close()

@@ -12,7 +12,7 @@ def checkConfig():
 	db = dbgen()
 	cursor = db.cursor()
 	cursor.execute("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA  WHERE SCHEMA_NAME = 'passwdDB'")
-	results = cursor.fetchall()
+	result = cursor.fetchall()
 	if len(result) != 0:
 		return True
 	return False
@@ -46,7 +46,7 @@ def createDB():
 
 	while 1:
 		masterPassword = getpass("Choose a MASTER PASSWORD: ")
-		if masterPassword == getpass("Re-Type password: ") and mp !="":
+		if masterPassword == getpass("Re-Type password: ") and masterPassword !="":
 			break
 		print("Please Try Again")
 
@@ -57,11 +57,23 @@ def createDB():
 	print("Salt Phrase Generated")
 
 	val = (hashedMasterPwd, saltedPhrase)
-	cursor.execute("INSERT INTO passwdDB.secrets (masterkey_hash, salt_phrase) values (%s, %s)")
+	cursor.execute("INSERT INTO passwdDB.secrets (masterkey_hash, salt_phrase) values (%s, %s)", val)
 	db.commit()
 
 	print("Database Configured")
 	db.close()
+
+def deleteDB():
+	if not checkConfig():
+		print("No Config to delete")
+		return
+
+	db = dbgen()
+	cursor = db.cursor()
+	cursor.execute("DROP DATABASE passwdDB")
+	db.commit()
+	db.close()
+	print("DB deleted")
 
 if __name__ == "__main__":
 	if len(sys.argv) != 2:
@@ -70,5 +82,7 @@ if __name__ == "__main__":
 
 	if sys.argv[1] == "make":
 		createDB()
+	elif sys.argv[1] == "delete":
+		deleteDB()
 	else:
 		print("Usage: python dbmanager.py <make>")
