@@ -3,8 +3,7 @@ from getpass import getpass
 import hashlib
 import pyperclip
 
-import func.add
-import func.retrieve
+import func.addAndRetrieve
 import func	.generate
 from func.db import dbgen
 
