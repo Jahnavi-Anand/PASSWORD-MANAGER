@@ -4,7 +4,7 @@ import hashlib
 import pyperclip
 
 import func.addAndRetrieve
-import func	.generate
+import func.generate
 from func.db import dbgen
 
 parser = argparse.ArgumentParser(description='Description')
