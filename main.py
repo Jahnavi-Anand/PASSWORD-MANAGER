@@ -4,7 +4,7 @@ import hashlib
 import pyperclip
 
 import func.addAndRetrieve
-import func	.generate
+import func.generate
 from func.db import dbgen
 
 parser = argparse.ArgumentParser(description='Description')
@@ -25,7 +25,7 @@ def inputAndValidateMasterPassword():
 	mp=getpass("MASTER PASSWORD: ")
 	hashed_mp=hashlib.sha256(mp.encode()).hexdigest()
 
-	db=dbconfig()
+	db=dbgen()
 	cursor=db.cursor()
 	query="SELECT * FROM passwdDB.secrets"
 	cursor.execute(query)
