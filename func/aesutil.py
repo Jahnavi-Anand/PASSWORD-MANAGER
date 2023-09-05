@@ -6,16 +6,6 @@ from Crypto import Random
 import sys
 
 def encrypt(key, source, encode=True, keyType = 'hex'):
-	'''
-	Parameters:
-	key - The key with which you want to encrypt. You can give a key in hex representation (which will then be converted to bytes) or just a normal ascii string. Default is hex
-	source - the message to encrypt
-	encode - whether to encode the output in base64. Default is true
-	keyType - specify the type of key passed
-
-	Returns:
-	Base64 encoded cipher
-	'''
 
 	source = source.encode()
 	if keyType == "hex":
