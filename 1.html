@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Password Manager</title>
+    <style>
+    body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+.login-container {
+    background-color: #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    width: 300px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+.login-container h1 {
+    margin-bottom: 20px;
+}
+
+.login-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-container label {
+    margin-bottom: 5px;
+}
+
+.login-container input {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.login-container button {
+    padding: 10px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.passwords-container {
+    margin: 20px auto;
+    max-width: 800px;
+}
+
+.passwords-container h1 {
+    text-align: center;
+}
+
+.password-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.platform,
+.username,
+.password {
+    flex: 1;
+    text-align: center;
+}
+</style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Login</h1>
+        <form id="login-form">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+    <div class="passwords-container">
+        <h1>Passwords</h1>
+        <div class="password-entry">
+            <div class="platform">Platform</div>
+            <div class="username">Username/Email</div>
+            <div class="password">Password</div>
+        </div>
+        <!-- You can dynamically add more password entries here using JavaScript -->
+    </div>
+    <script src="script.js">
+        const express = require('express');
+        const mysql = require('mysql2');
+const bodyParser = require('body-parser');
+const app = express();
+
+// Create a MySQL connection
+const db = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'ROOT',
+    database: 'password_manager',
+});
+
+// Connect to the database
+db.connect(err => {
+    if (err) {
+        console.error('Database connection failed: ' + err.stack);
+        return;
+    }
+    console.log('Connected to the database');
+});
+
+// Middleware to parse JSON
+app.use(bodyParser.json());
+
+// Define API endpoints for CRUD operations (Create, Read, Update, Delete)
+
+// Example: Get all password entries
+app.get('/api/passwords', (req, res) => {
+    const sql = 'SELECT * FROM passwords';
+    db.query(sql, (err, results) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        res.json({ passwords: results });
+    });
+});
+
+// Add more endpoints for CRUD operations as needed
+
+// Start the server
+const port = process.env.PORT || 5500;
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
+
+        // Dummy data for password entries (replace with your own data)
+const passwordEntries = [
+    { platform: "Example Platform 1", username: "user1@example.com", password: "password123" },
+    { platform: "Example Platform 2", username: "user2@example.com", password: "securePassword456" },
+    // Add more entries here
+];
+
+const passwordsContainer = document.querySelector(".passwords-container");
+
+// Function to display password entries
+// Function to display password entries
+function displayPasswordEntries() {
+    // Fetch password entries from the server
+    fetch('/api/passwords')
+        .then(response => response.json())
+        .then(data => {
+            passwordsContainer.innerHTML = `
+                <h1>Passwords</h1>
+                <div class="password-entry">
+                    <div class="platform">Platform</div>
+                    <div class="username">Username/Email</div>
+                    <div class="password">Password</div>
+                </div>
+            `;
+
+            data.passwords.forEach(entry => {
+                const passwordEntry = document.createElement("div");
+                passwordEntry.classList.add("password-entry");
+                passwordEntry.innerHTML = `
+                    <div class="platform">${entry.platform}</div>
+                    <div class="username">${entry.username}</div>
+                    <div class="password">${entry.password}</div>
+                `;
+                passwordsContainer.appendChild(passwordEntry);
+            });
+        })
+        .catch(error => console.error('Error fetching data:', error));
+}
+
+// Other API integration functions for CRUD operations
+// Function to create a new password entry
+function createPasswordEntry(platform, username, password) {
+    fetch('/api/passwords', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ platform, username, password }),
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error creating password entry');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Handle successful creation (e.g., display a success message)
+            console.log('Password entry created:', data);
+            displayPasswordEntries();
+        })
+        .catch(error => console.error('Error creating password entry:', error));
+}
+
+// Function to update an existing password entry
+function updatePasswordEntry(id, platform, username, password) {
+    fetch(`/api/passwords/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ platform, username, password }),
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error updating password entry');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Handle successful update (e.g., display a success message)
+            console.log('Password entry updated:', data);
+            displayPasswordEntries();
+        })
+        .catch(error => console.error('Error updating password entry:', error));
+}
+
+// Function to delete an existing password entry
+function deletePasswordEntry(id) {
+    fetch(`/api/passwords/${id}`, {
+        method: 'DELETE',
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error deleting password entry');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Handle successful deletion (e.g., display a success message)
+            console.log('Password entry deleted:', data);
+            displayPasswordEntries();
+        })
+        .catch(error => console.error('Error deleting password entry:', error));
+}
+
+// Example: Add event listeners for create, update, and delete actions
+
+// Event listener for creating a new password entry
+document.getElementById('create-button').addEventListener('click', function () {
+    const platform = prompt('Enter the platform:');
+    const username = prompt('Enter the username/email:');
+    const password = prompt('Enter the password:');
+    
+    if (platform && username && password) {
+        createPasswordEntry(platform, username, password);
+    } else {
+        // Handle invalid input or cancellation
+    }
+});
+
+// Event listener for updating an existing password entry (assuming you have a UI for selecting an entry to update)
+document.getElementById('update-button').addEventListener('click', function () {
+    const id = prompt('Enter the ID of the entry to update:');
+    const platform = prompt('Enter the updated platform:');
+    const username = prompt('Enter the updated username/email:');
+    const password = prompt('Enter the updated password:');
+    
+    if (id && platform && username && password) {
+        updatePasswordEntry(id, platform, username, password);
+    } else {
+        // Handle invalid input or cancellation
+    }
+});
+
+// Event listener for deleting an existing password entry (assuming you have a UI for selecting an entry to delete)
+document.getElementById('delete-button').addEventListener('click', function () {
+    const id = prompt('Enter the ID of the entry to delete:');
+    
+    if (id) {
+        deletePasswordEntry(id);
+    } else {
+        // Handle invalid input or cancellation
+    }
+});
+
+
+// Event listener for login form submission (dummy login logic)
+const loginForm = document.getElementById("login-form");
+loginForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    // Add your login logic here (e.g., check username and password)
+    // For simplicity, we'll assume the login is successful
+    displayPasswordEntries();
+});
+</script>
+
+</body>
+</html>
